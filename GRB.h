@@ -1,187 +1,101 @@
-// GRB.h - Грамматика Грейбаха для MZV-2025
-// Добавлена типизация GRBALPHABET из laba18
 #pragma once
-
-#include <cstring>
-#include <cstdarg>
-
-#define GRB_MAXSIZE_RULE    64      // Максимальное количество правил
-#define GRB_MAXSIZE_CHAIN   32      // Максимальное количество цепочек в правиле
-#define GRB_MAXSIZE_SYMBOL  64      // Максимальная длина цепочки
-
-// =================================================================
-// GRBALPHABET - типизированный алфавит грамматики (из laba18)
-// Терминалы: > 0 (положительные)
-// Нетерминалы: < 0 (отрицательные)
-// =================================================================
-typedef short GRBALPHABET;
-
-// Проверка: символ является нетерминалом
-// Старый макрос (для обратной совместимости)
-#define ISNS(s) ((s) >= 'A' && (s) <= 'Z')
-
-// Код ошибки по умолчанию
-#define GRB_ERROR_SERIES    600
-
-// Нетерминалы грамматики MZV-2025
-#define NS_S    'S'     // Стартовый символ (программа)
-#define NS_N    'N'     // Тело функции (операторы)
-#define NS_E    'E'     // Выражение
-#define NS_K    'K'     // Хвост выражения (tail) - для устранения левой рекурсии
-#define NS_F    'F'     // Параметры функции
-#define NS_W    'W'     // Аргументы вызова функции
-
-// Терминалы грамматики (соответствуют лексемам)
-#define TS_T    't'     // Тип (integer, char)
-#define TS_I    'i'     // Идентификатор
-#define TS_L    'l'     // Литерал
-#define TS_F    'f'     // function
-#define TS_D    'd'     // declare
-#define TS_M    'm'     // main
-#define TS_R    'r'     // return
-#define TS_O    'o'     // output
-#define TS_IF   '?'     // if
-#define TS_EL   ':'     // else
-#define TS_SC   ';'     // ;
-#define TS_CM   ','     // ,
-#define TS_LB   '{'     // {
-#define TS_RB   '}'     // }
-#define TS_LP   '('     // (
-#define TS_RP   ')'     // )
-#define TS_EQ   '='     // =
-#define TS_V    'v'     // Бинарная операция (+, -, *, /, %)
-#define TS_U    'u'     // Унарная операция (++, --, ~)
-#define TS_C    'c'     // Сравнение (<, >, <=, >=, ==, !=)
-#define TS_END  '$'     // Конец ленты / дно стека
-#define TS_EPS  '@'     // Эпсилон (пустая цепочка)
+#include "Error.h"
+typedef short GRBALPHABET;		///символы алфавита грамматики терминалы > 0, нетерминалы < 0
 
 namespace GRB
 {
-    // Цепочка символов правила грамматики
-    struct Chain
-    {
-        short size;                     // Длина цепочки
-        char  nt[GRB_MAXSIZE_SYMBOL];   // Символы цепочки
-
-        Chain();
-        Chain(const char* s);
-        char operator[](int i) const { return nt[i]; }
-
-        // =================================================================
-        // Статические методы для работы с GRBALPHABET (из laba18)
-        // =================================================================
-
-        // Преобразовать символ терминала в GRBALPHABET (положительный)
-        static GRBALPHABET T(char t)
-        {
-            return static_cast<GRBALPHABET>(t);
-        }
-
-        // Преобразовать символ нетерминала в GRBALPHABET (отрицательный)
-        static GRBALPHABET N(char n)
-        {
-            return static_cast<GRBALPHABET>(-n);
-        }
-
-        // Проверка: является ли символ терминалом (> 0)
-        static bool isT(GRBALPHABET s)
-        {
-            return s > 0;
-        }
-
-        // Проверка: является ли символ нетерминалом (< 0)
-        static bool isN(GRBALPHABET s)
-        {
-            return s < 0;
-        }
-
-        // Преобразовать GRBALPHABET обратно в ASCII-символ
-        static char alphabet_to_char(GRBALPHABET s)
-        {
-            return isT(s) ? static_cast<char>(s) : static_cast<char>(-s);
-        }
-
-        // Получить цепочку как GRBALPHABET-массив
-        void toAlphabet(GRBALPHABET* out, int& outSize) const
-        {
-            outSize = size;
-            for (int i = 0; i < size; i++)
-            {
-                char c = nt[i];
-                // Заглавные буквы A-Z - нетерминалы (отрицательные)
-                if (c >= 'A' && c <= 'Z')
-                    out[i] = N(c);
-                else
-                    out[i] = T(c);
-            }
-        }
-    };
-
-    // Правило грамматики A -> α1 | α2 | ... | αn
+    //Правило в грамматике Грейбах
     struct Rule
     {
-        char  nn;                           // Нетерминал левой части
-        int   idError;                      // Код ошибки для правила
-        short chainCount;                   // Количество альтернативных цепочек
-        Chain chains[GRB_MAXSIZE_CHAIN];    // Альтернативные цепочки
+        ///предст. одного правила в виде A->xxx|yyy|....
+        GRBALPHABET nn;        ///нетерминал (левый символ правила) < 0
+        int iderror;        ///код ошибки в Error
+        short size;            ///кол-во цепочек - правых частей правила
 
-        Rule();
-        Rule(char n, int err, int count, ...);
 
-        // Поиск цепочки, начинающейся с символа c, начиная с позиции start
-        int getNextChain(char c, int start = 0) const;
-
-        // Получить цепочку по номеру
-        Chain getChain(int n) const { return chains[n]; }
-
-        // Получить правило в виде строки для вывода
-        char* getCRule(char* buf, int nchain) const;
-
-        // =================================================================
-        // Дополнительные методы для работы с GRBALPHABET
-        // =================================================================
-
-        // Получить нетерминал как GRBALPHABET (отрицательный)
-        GRBALPHABET getNonTerminal() const
+        //Представление цепочки - правой стороны правила
+        struct Chain
         {
-            return Chain::N(nn);
+            short size;                        ///длина цепочки
+            GRBALPHABET* nt;                ///цепочка терминалов (>0) и нетермналов (<0)
+            Chain() {
+                size = 0;
+                nt = 0;
+            };
+            Chain(
+                short psize,                ///кол-во символов в цепочке
+                GRBALPHABET s, ...            ///символы (терминал или нетерминал)
+            );
+            char* getCChain(char* b);        ///получить строку-цепочку в символьном виде для отображения
+
+            //Методы, преобр. ASCI-символы в GRBALPHABET-символы (т и н)
+            static GRBALPHABET T(char t) {
+                return GRBALPHABET(t);        ///терминал
+            };
+            static GRBALPHABET N(char n) {
+                return -GRBALPHABET(n);        ///нетерминал
+            };
+
+            //Методы, провер. явл. ли GRBALPHABET-символ т или н
+            static bool isT(GRBALPHABET s) {
+                return s > 0;                ///терминал?
+            };
+            static bool isN(GRBALPHABET s) {
+                return !isT(s);                ///нетерминал?
+            }
+
+            //Метод, преобр. параметр GRBALPHABET-символ в ASCI-символ
+            static char alphabet_to_char(GRBALPHABET s) {
+                return isT(s) ? char(s) : char(-s); ///массив цепочек - правых частей правила
+            };
+        }*chains;
+
+        Rule() {                ///к-ры
+            nn = 0x00;
+            size = 0;
         }
+        Rule(
+            GRBALPHABET pnn,    ///нетерминал (<0)
+            int iderror,        ///иден сообщения диагностики (Error)
+            short psize,        ///кол-во цепочек - правых частей правила
+            Chain c, ...        ///мн-во цепочек - правых частей правила
+        );
+        char* getCRule            ///Получить правило в виде N->цепочка (для распечатки)
+        (
+            char* b,            ///буфер
+            short nchain        ///№ цепочки (правой части) в правиле
+        );
+        short getNextChain(    ///Получить след. за j цепочку, вернуть ее номер или -1
+            GRBALPHABET t,            ///первый символ цепочки
+            Rule::Chain& pchain,    ///возвращаемая цепочка
+            short j                    ///№ цепочки
+        );
     };
 
-    // Грамматика Грейбаха
-    struct Greibach
+
+    struct Greibach                //Грамматика Грейбах
     {
-        short    ruleCount;                 // Количество правил
-        Rule     rules[GRB_MAXSIZE_RULE];   // Правила грамматики
-        char     startSymbol;               // Стартовый символ
-        char     bottomStack;               // Маркер дна стека
-
-        Greibach();
-        Greibach(char start, char bottom, int count, ...);
-
-        // Поиск правила для нетерминала
-        int getRule(char nn, Rule& rule) const;
-
-        // Получить правило по номеру
-        Rule getRule(int n) const { return rules[n]; }
-
-        // =================================================================
-        // Дополнительные методы для GRBALPHABET
-        // =================================================================
-
-        // Получить стартовый символ как GRBALPHABET
-        GRBALPHABET getStartN() const
-        {
-            return Chain::N(startSymbol);
-        }
-
-        // Получить маркер дна стека как GRBALPHABET
-        GRBALPHABET getBottomT() const
-        {
-            return Chain::T(bottomStack);
-        }
+        short size;                ///кол-во правил
+        GRBALPHABET startN;        ///стартовый символ
+        GRBALPHABET stbottomT;    ///дно стека (последняя лексема в ТЛ)
+        Rule* rules;            ///мн-во правил
+        Greibach() {        ///к-р без парам
+            short size = 0;
+            startN = 0;
+            stbottomT = 0;
+            rules = 0;
+        };
+        Greibach(
+            GRBALPHABET pstartN,    ///стартовый символ
+            GRBALPHABET pstbottomT,    ///дно стека
+            short psize,            ///кол-во правил
+            Rule r, ...                ///правила
+        );
+        short getRule(            ///Получить № правила или -1
+            GRBALPHABET pnn,    ///левый символ правила
+            Rule& prule            ///возвращаемое правило грамматики
+        );
+        Rule getRule(short n);    ///получить правило по номеру
     };
-
-    // Получить грамматику MZV-2025
-    Greibach getGreibach();
-}
+    Greibach getGreibach();        ///получить грамматику
+};

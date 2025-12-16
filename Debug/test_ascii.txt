@@ -1,0 +1,29 @@
+integer function abs(integer x)
+{
+    declare integer r;
+    if (x < 0) {
+        r = 0 - x;
+    } else {
+        r = x;
+    };
+    return r;
+};
+
+main
+{
+    declare integer a;
+    declare integer b;
+
+    a = 25;
+    b = 10;
+
+    if (a > b) {
+        output 'big';
+    } else {
+        output 'small';
+    };
+
+    output a;
+    output 'End';
+    return 0;
+};

@@ -1,0 +1,15 @@
+main
+{
+    declare integer a;
+    a = 10;
+
+    if (a > 5) {
+        output 'большое';
+    } else {
+        output 'малое';
+    };
+
+    output 'Привет мир';
+    output 'Конец';
+    return 0;
+};

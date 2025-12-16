@@ -1,0 +1,13 @@
+integer function calc(integer x, integer y)
+{
+    declare integer r;
+    r = x !* y + x - y;
+    return r;
+};
+
+main
+{
+    declare integer a;
+    a = calc(5, 3);
+    return 0;
+};

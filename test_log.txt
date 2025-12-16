@@ -1,0 +1,172 @@
+﻿=== MZV-2025 ===
+Date: 12.12.2025 00:41:09
+
+--- Parameters ---
+in: test_error2.txt
+out: out.txt
+log: test_log.txt
+
+--- Source code (229 bytes, 18 lines) ---
+integer function max(integer a, integer b)
+{
+    declare integer r;
+    if (a > b) {
+        r != a;
+    } else {
+        r = b;
+    };
+    return r;
+};
+
+main
+{
+    declare integer x;
+    x = 1;
+    return 0;
+};
+
+
+
+--- Syntax analysis started ---
+Tape: tfi(ti,ti){dti;?(ici){ici;}:{i=i;};ri;};m{dti;i=l;rl;};$
+
+--------------------------------------------------------------------------------------
+Step : Rule                      Input tape                Stack
+--------------------------------------------------------------------------------------
+1   : S->tfi(F{N};S             tfi(ti,ti){dti;?(ici){ici S$
+1   :                           tfi(ti,ti){dti;?(ici){ici tfi(F{N};S$
+2   :                           tfi(ti,ti){dti;?(ici){ici tfi(F{N};S$
+3   :                           fi(ti,ti){dti;?(ici){ici; fi(F{N};S$
+4   :                           i(ti,ti){dti;?(ici){ici;} i(F{N};S$
+5   :                           (ti,ti){dti;?(ici){ici;}: (F{N};S$
+6   : F->ti,F                   ti,ti){dti;?(ici){ici;}:{ F{N};S$
+6   : SAVESTATE:             1
+6   :                           ti,ti){dti;?(ici){ici;}:{ ti,F{N};S$
+7   :                           ti,ti){dti;?(ici){ici;}:{ ti,F{N};S$
+8   :                           i,ti){dti;?(ici){ici;}:{i i,F{N};S$
+9   :                           ,ti){dti;?(ici){ici;}:{i= ,F{N};S$
+10  : F->ti,F                   ti){dti;?(ici){ici;}:{i=i F{N};S$
+10  : SAVESTATE:             2
+10  :                           ti){dti;?(ici){ici;}:{i=i ti,F{N};S$
+11  :                           ti){dti;?(ici){ici;}:{i=i ti,F{N};S$
+12  :                           i){dti;?(ici){ici;}:{i=i; i,F{N};S$
+13  : TS_NOK/NS_NORULECHAIN
+13  : RESTATE
+13  :                           ti){dti;?(ici){ici;}:{i=i F{N};S$
+14  : F->ti)                    ti){dti;?(ici){ici;}:{i=i F{N};S$
+14  :                           ti){dti;?(ici){ici;}:{i=i ti){N};S$
+15  :                           ti){dti;?(ici){ici;}:{i=i ti){N};S$
+16  :                           i){dti;?(ici){ici;}:{i=i; i){N};S$
+17  :                           ){dti;?(ici){ici;}:{i=i;} ){N};S$
+18  :                           {dti;?(ici){ici;}:{i=i;}; {N};S$
+19  : N->dti;N                  dti;?(ici){ici;}:{i=i;};r N};S$
+19  :                           dti;?(ici){ici;}:{i=i;};r dti;N};S$
+20  :                           dti;?(ici){ici;}:{i=i;};r dti;N};S$
+21  :                           ti;?(ici){ici;}:{i=i;};ri ti;N};S$
+22  :                           i;?(ici){ici;}:{i=i;};ri; i;N};S$
+23  :                           ;?(ici){ici;}:{i=i;};ri;} ;N};S$
+24  : N->?(EcE){N}:{N};N        ?(ici){ici;}:{i=i;};ri;}; N};S$
+24  : SAVESTATE:             2
+24  :                           ?(ici){ici;}:{i=i;};ri;}; ?(EcE){N}:{N};N};S$
+25  :                           ?(ici){ici;}:{i=i;};ri;}; ?(EcE){N}:{N};N};S$
+26  :                           (ici){ici;}:{i=i;};ri;};m (EcE){N}:{N};N};S$
+27  : E->i(WK                   ici){ici;}:{i=i;};ri;};m{ EcE){N}:{N};N};S$
+27  : SAVESTATE:             3
+27  :                           ici){ici;}:{i=i;};ri;};m{ i(WKcE){N}:{N};N};S$
+28  :                           ici){ici;}:{i=i;};ri;};m{ i(WKcE){N}:{N};N};S$
+29  : TS_NOK/NS_NORULECHAIN
+29  : RESTATE
+29  :                           ici){ici;}:{i=i;};ri;};m{ EcE){N}:{N};N};S$
+30  : E->iK                     ici){ici;}:{i=i;};ri;};m{ EcE){N}:{N};N};S$
+30  :                           ici){ici;}:{i=i;};ri;};m{ iKcE){N}:{N};N};S$
+31  :                           ici){ici;}:{i=i;};ri;};m{ iKcE){N}:{N};N};S$
+32  : K->e                      ci){ici;}:{i=i;};ri;};m{d KcE){N}:{N};N};S$
+32  :                           ci){ici;}:{i=i;};ri;};m{d cE){N}:{N};N};S$
+33  :                           ci){ici;}:{i=i;};ri;};m{d cE){N}:{N};N};S$
+34  : E->i(WK                   i){ici;}:{i=i;};ri;};m{dt E){N}:{N};N};S$
+34  : SAVESTATE:             3
+34  :                           i){ici;}:{i=i;};ri;};m{dt i(WK){N}:{N};N};S$
+35  :                           i){ici;}:{i=i;};ri;};m{dt i(WK){N}:{N};N};S$
+36  : TS_NOK/NS_NORULECHAIN
+36  : RESTATE
+36  :                           i){ici;}:{i=i;};ri;};m{dt E){N}:{N};N};S$
+37  : E->iK                     i){ici;}:{i=i;};ri;};m{dt E){N}:{N};N};S$
+37  :                           i){ici;}:{i=i;};ri;};m{dt iK){N}:{N};N};S$
+38  :                           i){ici;}:{i=i;};ri;};m{dt iK){N}:{N};N};S$
+39  : K->e                      ){ici;}:{i=i;};ri;};m{dti K){N}:{N};N};S$
+39  :                           ){ici;}:{i=i;};ri;};m{dti ){N}:{N};N};S$
+40  :                           ){ici;}:{i=i;};ri;};m{dti ){N}:{N};N};S$
+41  :                           {ici;}:{i=i;};ri;};m{dti; {N}:{N};N};S$
+42  : N->iu;N                   ici;}:{i=i;};ri;};m{dti;i N}:{N};N};S$
+42  : SAVESTATE:             3
+42  :                           ici;}:{i=i;};ri;};m{dti;i iu;N}:{N};N};S$
+43  :                           ici;}:{i=i;};ri;};m{dti;i iu;N}:{N};N};S$
+44  : TS_NOK/NS_NORULECHAIN
+44  : RESTATE
+44  :                           ici;}:{i=i;};ri;};m{dti;i N}:{N};N};S$
+45  : N->i=E;N                  ici;}:{i=i;};ri;};m{dti;i N}:{N};N};S$
+45  :                           ici;}:{i=i;};ri;};m{dti;i i=E;N}:{N};N};S$
+46  :                           ici;}:{i=i;};ri;};m{dti;i i=E;N}:{N};N};S$
+47  : TS_NOK/NS_NORULECHAIN
+47  : RESTATE
+47  :                           ?(ici){ici;}:{i=i;};ri;}; N};S$
+48  : N->?(EcE){N};N            ?(ici){ici;}:{i=i;};ri;}; N};S$
+48  :                           ?(ici){ici;}:{i=i;};ri;}; ?(EcE){N};N};S$
+49  :                           ?(ici){ici;}:{i=i;};ri;}; ?(EcE){N};N};S$
+50  :                           (ici){ici;}:{i=i;};ri;};m (EcE){N};N};S$
+51  : E->i(WK                   ici){ici;}:{i=i;};ri;};m{ EcE){N};N};S$
+51  : SAVESTATE:             2
+51  :                           ici){ici;}:{i=i;};ri;};m{ i(WKcE){N};N};S$
+52  :                           ici){ici;}:{i=i;};ri;};m{ i(WKcE){N};N};S$
+53  : TS_NOK/NS_NORULECHAIN
+53  : RESTATE
+53  :                           ici){ici;}:{i=i;};ri;};m{ EcE){N};N};S$
+54  : E->iK                     ici){ici;}:{i=i;};ri;};m{ EcE){N};N};S$
+54  :                           ici){ici;}:{i=i;};ri;};m{ iKcE){N};N};S$
+55  :                           ici){ici;}:{i=i;};ri;};m{ iKcE){N};N};S$
+56  : K->e                      ci){ici;}:{i=i;};ri;};m{d KcE){N};N};S$
+56  :                           ci){ici;}:{i=i;};ri;};m{d cE){N};N};S$
+57  :                           ci){ici;}:{i=i;};ri;};m{d cE){N};N};S$
+58  : E->i(WK                   i){ici;}:{i=i;};ri;};m{dt E){N};N};S$
+58  : SAVESTATE:             2
+58  :                           i){ici;}:{i=i;};ri;};m{dt i(WK){N};N};S$
+59  :                           i){ici;}:{i=i;};ri;};m{dt i(WK){N};N};S$
+60  : TS_NOK/NS_NORULECHAIN
+60  : RESTATE
+60  :                           i){ici;}:{i=i;};ri;};m{dt E){N};N};S$
+61  : E->iK                     i){ici;}:{i=i;};ri;};m{dt E){N};N};S$
+61  :                           i){ici;}:{i=i;};ri;};m{dt iK){N};N};S$
+62  :                           i){ici;}:{i=i;};ri;};m{dt iK){N};N};S$
+63  : K->e                      ){ici;}:{i=i;};ri;};m{dti K){N};N};S$
+63  :                           ){ici;}:{i=i;};ri;};m{dti ){N};N};S$
+64  :                           ){ici;}:{i=i;};ri;};m{dti ){N};N};S$
+65  :                           {ici;}:{i=i;};ri;};m{dti; {N};N};S$
+66  : N->iu;N                   ici;}:{i=i;};ri;};m{dti;i N};N};S$
+66  : SAVESTATE:             2
+66  :                           ici;}:{i=i;};ri;};m{dti;i iu;N};N};S$
+67  :                           ici;}:{i=i;};ri;};m{dti;i iu;N};N};S$
+68  : TS_NOK/NS_NORULECHAIN
+68  : RESTATE
+68  :                           ici;}:{i=i;};ri;};m{dti;i N};N};S$
+69  : N->i=E;N                  ici;}:{i=i;};ri;};m{dti;i N};N};S$
+69  :                           ici;}:{i=i;};ri;};m{dti;i i=E;N};N};S$
+70  :                           ici;}:{i=i;};ri;};m{dti;i i=E;N};N};S$
+71  : TS_NOK/NS_NORULECHAIN
+71  : RESTATE
+71  :                           ti,ti){dti;?(ici){ici;}:{ F{N};S$
+72  : F->ti)                    ti,ti){dti;?(ici){ici;}:{ F{N};S$
+72  :                           ti,ti){dti;?(ici){ici;}:{ ti){N};S$
+73  :                           ti,ti){dti;?(ici){ici;}:{ ti){N};S$
+74  :                           i,ti){dti;?(ici){ici;}:{i i){N};S$
+75  : TS_NOK/NS_NORULECHAIN
+--------------------------------------------------------------------------------------
+
+--- Parsing failed ---
+Diagnostics:
+  Строка 1: ошибка 602
+  Строка 1: ошибка 602
+  Строка 4: ошибка 604
+  Строка 4: ошибка 604
+  Строка 5: ошибка 603
+--- Error 603: Ошибка в теле функции ---
+Line 5, position 11

@@ -1,0 +1,36 @@
+integer function sum(integer a, integer b)
+{
+    declare integer result;
+    result = a + b;
+    return result;
+};
+
+main
+{
+    declare integer x;
+    declare integer y;
+    declare integer z;
+    declare char ch;
+
+    x = 10;
+    y = 0b1010;
+    z = sum(x, y);
+
+    output z;
+    output 'Hello MZV-2025';
+
+    if (z > 15)
+    {
+        output 'Big';
+        z++;
+    }
+    else
+    {
+        output 'Small';
+        z--;
+    };
+
+    x = ~x;
+
+    return 0;
+};

@@ -1,0 +1,11 @@
+
+main
+{
+    declare char b;
+    declare integer b;
+    
+    b = 1;
+    output b;
+
+    return 0;
+};

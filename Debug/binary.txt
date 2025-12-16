@@ -1,0 +1,16 @@
+main
+{
+    declare integer a;
+    declare integer b;
+    declare integer c;
+
+    a = 0b0001;
+    b = 0b1111;
+    c = 0b10101010;
+
+    output a;
+    output b;
+    output c;
+
+    return 0;
+};

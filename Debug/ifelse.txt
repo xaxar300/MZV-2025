@@ -1,0 +1,30 @@
+main
+{
+    declare integer n;
+    declare char result;
+
+    n = 42;
+
+    if (n > 100)
+    {
+        output 'Greater than 100';
+    }
+    else
+    {
+        if (n > 50)
+        {
+            output 'Between 50 and 100';
+        }
+        else
+        {
+            output 'Less than 50';
+        };
+    };
+
+    if (n == 42)
+    {
+        output 'Answer to everything';
+    };
+
+    return 0;
+};

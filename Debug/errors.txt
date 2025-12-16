@@ -1,0 +1,17 @@
+integer function test(integer x)
+{
+    declare integer r;
+    r = x + 1;
+    return r;
+};
+
+main
+{
+    declare integer a;
+    declare char ch;
+    a = 10;
+    ch = 'X';
+    output a;
+    output ch;
+    return 0;
+};

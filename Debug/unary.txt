@@ -1,0 +1,17 @@
+main
+{
+    declare integer x;
+    declare integer y;
+
+    x = 5;
+    y = 10;
+
+    x++;
+    y--;
+    x = ~x;
+
+    output x;
+    output y;
+
+    return 0;
+};
